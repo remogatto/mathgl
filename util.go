@@ -3,7 +3,6 @@ package mathgl
 import "math"
 
 // Epsilon is some tiny value that determines how precisely equal we want our floats to be
-const epsilon float64 = 1e-15
 
 // FloatEqual is a safe utility function to compare floats.
 // It's Taken from http://floating-point-gui.de/errors/comparison/
@@ -11,6 +10,7 @@ const epsilon float64 = 1e-15
 // It is slightly altered to not call Abs when not needed.
 // Keep in mind that it expects float32s to be converted to float64s before being passed in, because they have to be converted for Abs anyway
 func FloatEqual(a, b float64) bool {
+	var epsilon float64 = 1e-15
 	if a == b { // Handles the case of inf or shortcuts the loop when no significant error has accumulated
 		return true
 	} else if a*b == 0 { // If a or b are 0
@@ -22,14 +22,16 @@ func FloatEqual(a, b float64) bool {
 }
 
 func FloatEqual32(a, b float32) bool {
+	var epsilon float32 = 1e-15
 	if a == b { // Handles the case of inf or shortcuts the loop when no significant error has accumulated
 		return true
 	} else if a*b == 0 { // If a or b is 0
-		return math.Abs(float64(a-b)) < epsilon*epsilon
+		//return math.Abs(float64(a-b)) < epsilon*epsilon
+		return Fabs32(a-b) < epsilon*epsilon
 	}
 
 	// Else compare difference
-	return math.Abs(float64(a-b))/(math.Abs(float64(a))+math.Abs(float64(b))) < epsilon
+	return Fabs32(a-b)/(Fabs32(a)+Fabs32(b)) < epsilon
 }
 
 func FloatEqualFunc(epsilon float64) func(float64, float64) bool {
@@ -66,11 +68,11 @@ func FloatEqualThreshold32(a, b, epsilon float32) bool {
 	if a == b { // Handles the case of inf or shortcuts the loop when no significant error has accumulated
 		return true
 	} else if a*b == 0 { // If a or b is 0
-		return math.Abs(float64(a-b)) < float64(epsilon*epsilon)
+		return Fabs32(a-b) < Fsqr32(epsilon)
 	}
 
 	// Else compare difference
-	return math.Abs(float64(a-b))/(math.Abs(float64(a))+math.Abs(float64(b))) < float64(epsilon)
+	return Fabs32(a-b)/(Fabs32(a)+Fabs32(b)) < epsilon
 }
 
 func Clampf(a, t1, t2 float32) float32 {
