@@ -154,7 +154,8 @@ func ShearZ3D(shearX, shearY float32) Mat4f {
 //    [[ 0         , 0         , 0         , 1 ]]
 func HomogRotate3D(angle float32, axis Vec3f) Mat4f {
 	x, y, z := axis[0], axis[1], axis[2]
-	s, c := float32(math.Sin(float64(angle))), float32(math.Cos(float64(angle)))
+	s := float32(math.Sin(float64(angle)))
+	c := float32(math.Cos(float64(angle)))
 	k := 1 - c
 
 	return Mat4f{x*x*k + c, x*y*k + z*s, x*z*k - y*s, 0, x*y*k - z*s, y*y*k + c, y*z*k + x*s, 0, x*z*k + y*s, y*z*k - x*s, z*z*k + c, 0, 0, 0, 0, 1}
